@@ -32,3 +32,26 @@ spec:
     protocol: TCP
     port: 80 # this port belongs to service
     targetPort: 80 # this port belongs to container
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: app2
+    annotations:
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/target-type: ip
+        alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
+        alb.ingress.kubernetes.io/group.name: joindevops
+spec:
+  ingressClassName: alb
+  rules:
+  - host: "app2.joindevops.online"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app2
+            port:
+              number: 80
